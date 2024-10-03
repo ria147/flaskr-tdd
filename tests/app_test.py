@@ -1,4 +1,3 @@
-import os
 import json
 import pytest
 from pathlib import Path
@@ -19,7 +18,7 @@ def client():
     with app.app_context():
         db.create_all()  # setup
         yield app.test_client()  # tests run here
-        db.session.close() # PG hanging, source: https://stackoverflow.com/questions/6778942/python-sqlalchemy-postgresql-program-freezes
+        db.session.close()  # PG hanging, source: https://stackoverflow.com/questions/6778942/python-sqlalchemy-postgresql-program-freezes
         db.drop_all()  # teardown
 
 
@@ -78,6 +77,7 @@ def test_messages(client):
     assert b"&lt;Hello&gt;" in rv.data
     assert b"<strong>HTML</strong> allowed here" in rv.data
 
+
 def test_delete_message(client):
     """Ensure the messages are being deleted"""
     rv = client.get("/delete/1")
@@ -88,6 +88,7 @@ def test_delete_message(client):
     data = json.loads(rv.data)
     assert data["status"] == 1
 
+
 def test_login_required_to_delete(client):
     """Test that deleting a post without logging in returns an error"""
     rv = client.get("/delete/1")
@@ -95,6 +96,7 @@ def test_login_required_to_delete(client):
     assert rv.status_code == 401
     assert data["status"] == 0
     assert data["message"] == "Please log in."
+
 
 def test_search_messages(client):
     """Ensure that use can search messages"""
@@ -104,7 +106,7 @@ def test_search_messages(client):
     db.session.commit()
 
     search_for_text = "World"
-    response = client.get("/search/?query="+search_for_text, follow_redirects=True)
+    response = client.get("/search/?query=" + search_for_text, follow_redirects=True)
     assert search_for_text in response.text
 
 # import json

@@ -1,9 +1,9 @@
-import sqlite3
+# import sqlite3
 import os
 from pathlib import Path
 
-from flask import Flask, g, render_template, request, session, \
-                  flash, redirect, url_for, abort, jsonify
+from flask import Flask, render_template, request, session, \
+    flash, redirect, url_for, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 
@@ -77,6 +77,7 @@ def logout():
     flash('You were logged out')
     return redirect(url_for('index'))
 
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -101,6 +102,7 @@ def delete_entry(post_id):
     except Exception as e:
         result = {'status': 0, 'message': repr(e)}
     return jsonify(result)
+
 
 @app.route('/search/', methods=['GET'])
 def search():
