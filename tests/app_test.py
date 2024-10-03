@@ -87,6 +87,14 @@ def test_delete_message(client):
     data = json.loads(rv.data)
     assert data["status"] == 1
 
+def test_login_required_to_delete(client):
+    """Test that deleting a post without logging in returns an error"""
+    rv = client.get("/delete/1")
+    data = json.loads(rv.data)
+    assert rv.status_code == 401
+    assert data["status"] == 0
+    assert data["message"] == "Please log in."
+
 def test_search_messages(client):
     """Ensure that use can search messages"""
     # Add a new entry
