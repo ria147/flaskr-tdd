@@ -4,6 +4,7 @@ import pytest
 from pathlib import Path
 
 from project.app import app, db
+from project import models
 
 TEST_DB = "test.db"
 
@@ -81,6 +82,17 @@ def test_delete_message(client):
     rv = client.get('/delete/1')
     data = json.loads(rv.data)
     assert data["status"] == 1
+
+def test_search_messages(client):
+    """Ensure that use can search messages"""
+    # Add a new entry
+    new_entries = models.Post("Test", "Hello World!")
+    db.session.add(new_entries)
+    db.session.commit()
+
+    search_for_text = "World"
+    response = client.get("/search/?query="+search_for_text, follow_redirects=True)
+    assert search_for_text in response.text
 
 # import json
 # from pathlib import Path
