@@ -109,6 +109,7 @@ def test_search_messages(client):
     response = client.get("/search/?query=" + search_for_text, follow_redirects=True)
     assert search_for_text in response.text
 
+
 # import json
 # from pathlib import Path
 
